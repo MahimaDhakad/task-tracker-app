@@ -51,6 +51,20 @@ const TaskItem = ({ task, onUpdateTask, onDeleteTask }) => {
     return `status-${status}`;
   };
 
+  // Calculate if task due date has passed (Overdue)
+  const isOverdue = task.dueDate && 
+                    task.status !== 'completed' && 
+                    new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0));
+
+  const handleToggleComplete = () => {
+    const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    onUpdateTask(task._id, {
+      ...task,
+      dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
+      status: newStatus
+    });
+  };
+
   if (isEditing) {
     return (
       <div className="task-item editing">
@@ -99,28 +113,55 @@ const TaskItem = ({ task, onUpdateTask, onDeleteTask }) => {
   }
 
   return (
-    <div className={`task-item ${getStatusClass(task.status)}`}>
+    <div className={`task-item ${getStatusClass(task.status)} ${isOverdue ? 'is-overdue' : ''}`}>
       <div className="task-header">
-        <h3 className="task-title">{task.title}</h3>
-        <span className={`priority-badge ${getPriorityClass(task.priority)}`}>
-          {task.priority}
-        </span>
+        <div className="task-title-group">
+          <button 
+            onClick={handleToggleComplete}
+            className={`btn-check-toggle ${task.status === 'completed' ? 'checked' : ''}`}
+            title={task.status === 'completed' ? "Mark as Pending" : "Mark as Completed"}
+          >
+            {task.status === 'completed' ? '✓' : ''}
+          </button>
+          <h3 className={`task-title ${task.status === 'completed' ? 'completed-text' : ''}`}>
+            {task.title}
+          </h3>
+        </div>
+
+        <div className="task-badges">
+          {isOverdue && (
+            <span className="priority-badge overdue-badge" title="Task deadline has passed!">
+              ⚠️ Overdue
+            </span>
+          )}
+          <span className={`priority-badge ${getPriorityClass(task.priority)}`}>
+            {task.priority}
+          </span>
+        </div>
       </div>
       
       {task.description && (
-        <p className="task-description">{task.description}</p>
+        <p className={`task-description ${task.status === 'completed' ? 'completed-text' : ''}`}>
+          {task.description}
+        </p>
       )}
       
       <div className="task-meta">
         <span className={`status-badge ${getStatusClass(task.status)}`}>
-          {task.status.replace('-', ' ')}
+          {task.status === 'completed' ? '✅ Completed' : task.status.replace('-', ' ')}
         </span>
-        <span className="due-date">
+        <span className={`due-date ${isOverdue ? 'overdue-date-text' : ''}`}>
           📅 {formatDate(task.dueDate)}
         </span>
       </div>
       
       <div className="task-actions">
+        <button 
+          onClick={handleToggleComplete} 
+          className={`btn ${task.status === 'completed' ? 'btn-reopen' : 'btn-complete'}`}
+        >
+          {task.status === 'completed' ? '↺ Reopen' : '✓ Complete'}
+        </button>
         <button 
           onClick={() => setIsEditing(true)} 
           className="btn btn-edit"

@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
       email,
       password
     });
-
+    // console.log("✅ User Saved:", user);
     // Create token
     const token = user.getSignedJwtToken();
 

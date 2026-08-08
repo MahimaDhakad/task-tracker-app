@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 
 // Step 1: .env file se environment variables load karo
 dotenv.config();
+// console.log("JWT_SECRET =", process.env.JWT_SECRET);
 
 // Step 2: MongoDB se connect karo
 connectDB();
@@ -18,13 +19,13 @@ connectDB();
 const app = express();
 
 // Step 4: Middleware setup (JSON data accept karne ke liye)
-app.use(cors());                              
-app.use(express.json());            
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Step 5: API Routes
-app.use('/api/auth', authRoutes);             
-app.use('/api/tasks', taskRoutes);            
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Step 6: Root route (check karne ke liye server chal raha hai ya nahi)
 app.get('/', (req, res) => {
