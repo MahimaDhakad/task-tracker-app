@@ -19,7 +19,16 @@ connectDB();
 const app = express();
 
 // Step 4: Middleware setup (JSON data accept karne ke liye)
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://task-tracker-app-2-pzqx.onrender.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
