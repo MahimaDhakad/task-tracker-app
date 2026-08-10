@@ -4,8 +4,7 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = 'https://task-tracker-app-1-l9eu.onrender.com/api/auth';
-
+const API_URL = "https://task-tracker-app-1-l9eu.onrender.com/api/auth";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
